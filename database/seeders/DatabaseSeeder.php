@@ -20,17 +20,23 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'name' => 'Victor Manuel Rosario Casado',
             'email' => 'vrosario670@gmail.com',
-            'password' => bcrypt(123456789)
+            'phone' => '8099849880',
+            'id_document' => '40213366285',
+            'password' => bcrypt(123456789),
+            'place' => 1
+            
         ]);
 
         \App\Models\User::create([
             'name' => 'Victor Manuel Rosario Casado',
             'email' => 'manuel_victor_rc@hotmail.com',
+            'phone' => '8099849880',
+            'id_document' => '40213366284',
             'password' => bcrypt(123456789),
             'place' => 2
         ]);
 
-        Category::factory(5)->create();
-        Shift::factory(10)->create();
+       /*  Category::factory(5)->create();
+        Shift::factory(10)->create(); */
     }
 }

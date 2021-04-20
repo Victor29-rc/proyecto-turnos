@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ShiftAssignedToUser;
 use App\Models\Category;
 use App\Models\Shift;
 use Carbon\Carbon;
@@ -11,16 +12,10 @@ use Illuminate\Support\Facades\DB;
 
 class ShiftController extends Controller
 {
+
     public function index()
     {
-        $shifts = DB::table('shifts')
-            ->join('categories', 'shifts.category_id', '=', 'categories.id')
-            ->join('users', 'shifts.user_id', '=', 'users.id')
-            ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
-            ->where('shifts.status', '=', '1')
-            ->latest('shifts.updated_at', 'asc')
-            ->take(5)
-            ->get();
+        $shifts = Shift::CurrentListOfShifts();
 
         return view('shifts.index', compact('shifts'));
     }
@@ -115,23 +110,26 @@ class ShiftController extends Controller
                 ->get();
         }
 
+        $shifts = Shift::CurrentListOfShifts();;
+        
+        broadcast(new ShiftAssignedToUser($shifts));
+        
         return view('shifts.show', compact('shift'));
     }
 
     public function callAgain(){
 
-        $shift = DB::table('shifts') //selecciono el turno siguiente sin asignar
+        //refrescando la consulta con el userd_id actualizado en la vista del cajero
+        $shift = DB::table('shifts')
             ->join('categories', 'shifts.category_id', '=', 'categories.id')
             ->join('users', 'shifts.user_id', '=', 'users.id')
-            ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status', 'shifts.user_id')
-            ->where('shifts.status', '=', 1)
-            ->where('shifts.user_id', '=',  Auth::user()->id)
-            ->latest('shifts.updated_at')
-            ->orderBy('categories.priority', 'asc')
-            ->orderBy('shifts.id', 'asc')
+            ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
+            ->where('shifts.status', '=', '1')
+            ->where('shifts.user_id', '=', Auth::user()->id)
+            ->latest('shifts.updated_at', 'asc')
             ->take(1)
-            ->get();    
-        
+            ->get(); 
+
         return view('shifts.show', compact('shift'));
     }
 

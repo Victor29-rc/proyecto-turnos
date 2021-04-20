@@ -28,14 +28,14 @@
                                          </th>
                                      </tr>
                                  </thead> 
-     
+
                                 <tbody class="bg-white divide-y divide-gray-200">
                                         <tr>
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center">
                                                     <div class="ml-4">
                                                         <div class="text-sm font-medium text-gray-900">
-                                                            @if (isset($shift) && $shift != null)
+                                                            @if (isset($shift[0]) && $shift[0] != null)
                                                                 {{$shift[0]->ticket_code}}
                                                             @endif
                                                         </div>

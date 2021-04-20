@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ShiftController;
+use App\Http\Livewire\AssignShift;
+use App\Http\Livewire\ShowShifts;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +24,7 @@ Route::put('/', [ShiftController::class, 'store'])->name('shifts.store');
 
 Route::get('show', [ShiftController::class, 'show'])->name('shifts.show');//llama a un paciente y le asigna un cajero
 
-Route::get('show/callNext', [ShiftController::class, 'callNext'])->name('shifts.callNext');
+Route::get('show/callNext', [ShiftController::class, 'callNext'])->name('shifts.callNext'); 
 
 Route::get('show/callAgain', [ShiftController::class, 'callAgain'])->name('shifts.callAgain');
 

@@ -248,7 +248,7 @@ return [
         ],
         [
             'text' => 'Usuarios',
-            'url'  => 'admin/category',
+            'route'  => 'admin.users.index',
             'icon' => 'fas fa-fw fa-user',
         ],
         [

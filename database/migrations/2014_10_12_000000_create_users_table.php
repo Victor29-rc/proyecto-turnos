@@ -17,6 +17,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('id_document', 11)->unique();
+            $table->string('phone', 10);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -24,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->text('profile_photo_path')->nullable();
             $table->timestamps();
 
-            $table->unsignedTinyInteger('place')->default(1); //puesto del usuario
+            $table->unsignedTinyInteger('place'); //puesto del usuario
         });
     }
 

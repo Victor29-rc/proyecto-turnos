@@ -16,7 +16,7 @@
         @livewireStyles
 
         <!-- Scripts -->
-        <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="{{ mix('js/app.js') }}" ></script>
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
@@ -28,6 +28,11 @@
             <main>
                 {{ $slot }}
             </main>
+
+          <ul id="shifts_queue">
+
+          </ul>
+          
         </div>
 
         @stack('modals')
