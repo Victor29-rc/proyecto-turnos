@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CallShiftAgain;
 use App\Events\ShiftAssignedToUser;
 use App\Models\Category;
 use App\Models\Shift;
+use ArrayObject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,28 +95,42 @@ class ShiftController extends Controller
             ->take(1)
             ->get();
 
-        if ($shift[0]->user_id == null) { //Si el turno siguiente no se ha asignado a ninguna caja, asignalo al usuario logueado
-            $shift_register = Shift::find($shift[0]->id);
+        if(empty($shift[0])){ //si no hay turnos por asignar
 
-            $shift_register->user_id = Auth::user()->id;
-            $shift_register->save();
+            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO'];
+            $values = (object) $values;
 
-            $shift = DB::table('shifts') //refrescando la consulta con el userd_id actualizado en la vista del cajero
-                ->join('categories', 'shifts.category_id', '=', 'categories.id')
-                ->join('users', 'shifts.user_id', '=', 'users.id')
-                ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
-                ->where('shifts.id', '=', $shift[0]->id)
-                ->orderBy('categories.priority', 'asc')
-                ->orderBy('shifts.id', 'asc')
-                ->take(1)
-                ->get();
+            $shift = array();
+            array_push($shift, $values);
+        
+            return view('shifts.show', compact('shift'));
+        }
+        else{
+
+            if ($shift[0]->user_id == null) { //Si el turno siguiente no se ha asignado a ninguna caja, asignalo al usuario logueado
+                $shift_register = Shift::find($shift[0]->id);
+    
+                $shift_register->user_id = Auth::user()->id;
+                $shift_register->save();
+    
+                $shift = DB::table('shifts') //refrescando la consulta con el userd_id actualizado en la vista del cajero
+                    ->join('categories', 'shifts.category_id', '=', 'categories.id')
+                    ->join('users', 'shifts.user_id', '=', 'users.id')
+                    ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
+                    ->where('shifts.id', '=', $shift[0]->id)
+                    ->orderBy('categories.priority', 'asc')
+                    ->orderBy('shifts.id', 'asc')
+                    ->take(1)
+                    ->get();
+            }
+
+            $shifts = Shift::CurrentListOfShifts();
+        
+            broadcast(new ShiftAssignedToUser($shifts));
+            
+            return view('shifts.show', compact('shift'));
         }
 
-        $shifts = Shift::CurrentListOfShifts();;
-        
-        broadcast(new ShiftAssignedToUser($shifts));
-        
-        return view('shifts.show', compact('shift'));
     }
 
     public function callAgain(){
@@ -130,7 +146,16 @@ class ShiftController extends Controller
             ->take(1)
             ->get(); 
 
-        return view('shifts.show', compact('shift'));
+        if($shift){
+
+            /* $shifts = Shift::CurrentListOfShifts();
+
+            broadcast(new ShiftAssignedToUser($shifts)); */
+            broadcast(new CallShiftAgain($shift));
+
+            return view('shifts.show', compact('shift'));
+        }
+        
     }
 
     public function show(){

@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Shift;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,20 +11,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ShiftAssignedToUser implements ShouldBroadcast
+class CallShiftAgain implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $shifts;
-
+    public $shift;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($shifts)
+    public function __construct($shift)
     {
-        $this->shifts = $shifts;
+        $this->shift = $shift;
     }
 
     /**
@@ -33,7 +33,7 @@ class ShiftAssignedToUser implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        /* \Log::debug("listado de turnos {$this->shifts}"); */
+        /* \Log::debug("turno {$this->shift}"); */
         return new Channel('listOfShiftsUpdated');
     }
 }

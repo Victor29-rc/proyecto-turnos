@@ -16,15 +16,16 @@ class ShiftController extends Controller
      */
     public function index()
     {
-        $shifts = DB::table('shifts')
+        /* $shifts = DB::table('shifts')
         ->join('categories', 'shifts.category_id', '=', 'categories.id')
         ->join('users', 'shifts.user_id', '=', 'users.id')
         ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
         ->where('shifts.status', '=', '1')
         ->latest('shifts.updated_at', 'asc')
         ->take(5)
-        ->get();
-
+        ->get(); */
+        $shifts = Shift::CurrentListOfShifts(); 
+  
         return $shifts;
     }
 

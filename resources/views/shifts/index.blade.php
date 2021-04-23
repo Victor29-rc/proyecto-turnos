@@ -86,7 +86,6 @@
 
         <script>
             window.Echo.channel('listOfShiftsUpdated')
-
                 .listen('ShiftAssignedToUser', (e) => {
                     
                     let shifts = document.getElementById("show_tickets");
@@ -133,6 +132,17 @@
                         shifts.appendChild(row);
                         
                     });
+                })
+                .listen('CallShiftAgain', (e) => {
+
+                    var code = e.shift.forEach(element => {
+                        var code = element.ticket_code;
+                        var place = element.place;
+
+                        let utterance = new SpeechSynthesisUtterance(code +", puesto, "+ place);
+                        speechSynthesis.speak(utterance);
+                    });;
+                   
                 });
         </script>
     </body>
