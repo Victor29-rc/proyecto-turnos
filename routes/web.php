@@ -22,11 +22,15 @@ Route::get('create', [ShiftController::class, 'create'])->name('shifts.create');
 
 Route::put('/', [ShiftController::class, 'store'])->name('shifts.store');
 
-Route::get('show', [ShiftController::class, 'show'])->name('shifts.show')->middleware('auth');//llama a un paciente y le asigna un cajero
+Route::get('show', [ShiftController::class, 'show'])->name('shifts.show')->middleware('can:shifts.show');//llama a un paciente y le asigna un cajero
 
-Route::get('show/callNext', [ShiftController::class, 'callNext'])->name('shifts.callNext')->middleware('auth');
+Route::get('show/callNext', [ShiftController::class, 'callNext'])->name('shifts.callNext')->middleware('can:shifts.callNext');
 
-Route::get('show/callAgain', [ShiftController::class, 'callAgain'])->name('shifts.callAgain')->middleware('auth');
+Route::get('show/callAgain', [ShiftController::class, 'callAgain'])->name('shifts.callAgain')->middleware('can:shifts.callAgain');
+
+Route::get('show/attended', [ShiftController::class, 'attented'])->name('shifts.attented')->middleware('can:shifts.callNext');
+
+Route::get('show/cancel', [ShiftController::class, 'cancel'])->name('shifts.cancel')->middleware('can:shifts.callNext');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

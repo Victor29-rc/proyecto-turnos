@@ -45,31 +45,31 @@
 
                                            {{--  @foreach ($shifts as $shift) --}}
 
-                                                <tbody id="show_tickets" class="bg-white divide-y divide-gray-200">
-                                                   {{--  <tr id="shift" @if ($loop->first) class="bg-blue-300" @endif>
-                                                        <td class="px-6 py-4">
-                                                            <div class="flex items-center">
-                                                                <div class="ml-4">
-                                                                    <div id="ticket_code" class="text-sm font-medium text-gray-900">
-                                                                       
-                                                                    </div>
+                                            <tbody id="show_tickets" class="bg-white divide-y divide-gray-200">
+                                                {{--  <tr id="shift" @if ($loop->first) class="bg-blue-300" @endif>
+                                                    <td class="px-6 py-4">
+                                                        <div class="flex items-center">
+                                                            <div class="ml-4">
+                                                                <div id="ticket_code" class="text-sm font-medium text-gray-900">
+                                                                    
                                                                 </div>
                                                             </div>
-                                                        </td>
+                                                        </div>
+                                                    </td>
 
-                                                        <td id="place" class="px-6 py-4 text-sm text-gray-500">
-                                                            
-                                                        </td>
+                                                    <td id="place" class="px-6 py-4 text-sm text-gray-500">
+                                                        
+                                                    </td>
 
-                                                        <td id="priority" class="px-6 py-4 text-sm text-gray-500">
-                                                           
-                                                        </td>
-                                                    </tr> --}}
+                                                    <td id="priority" class="px-6 py-4 text-sm text-gray-500">
+                                                        
+                                                    </td>
+                                                </tr> --}}
 
 
 
-                                                    <!-- More items... -->
-                                                </tbody>
+                                                <!-- More items... -->
+                                            </tbody>
                                            {{--  @endforeach --}}
 
                                         </table>

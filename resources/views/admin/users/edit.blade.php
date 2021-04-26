@@ -16,8 +16,26 @@
 
         <div class="card">
             <div class="card-body">
+
+                <h2 class="h5">
+                    Listado de roles
+                </h2>
+
                 {!! Form::model($user, ['route' => ['admin.users.update', $user], 'method' => 'put']) !!}
-        
+                
+                @foreach ($roles as $role)
+                    <div>
+                        <label>
+                            {!! Form::checkbox('roles[]', $role->id, null, ['class' => 'mr-1']) !!}
+                            {{$role->name}}
+                        </label>
+                    </div>
+                @endforeach
+
+                <h2 class="h5">
+                    Datos del usuario
+                </h2>
+
                 <div class="form-group">
                     {!! Form::label('name', 'Nombre') !!}
                     {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el nombre del usuario']) !!}
@@ -72,7 +90,7 @@
                     <span class="text-danger">{{$message}}</span><br><br>
                 @enderror
         
-                    {!! Form::submit('Actualizar categoría', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::submit('Actualizar usuario', ['class' => 'btn btn-primary']) !!}
         
                 {!! Form::close() !!}
             </div>

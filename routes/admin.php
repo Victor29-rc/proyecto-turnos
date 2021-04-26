@@ -4,9 +4,12 @@ use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Supervisor\RerportController;
 
-Route::get('', [HomeController::class, 'index'])->name('admin.index');
+Route::get('', [HomeController::class, 'index'])->middleware('can:admin.index')->name('admin.index');
 
-Route::resource('categories', CategoryController::class)->names('admin.categories');
+Route::resource('categories', CategoryController::class)->middleware('can:admin.categories.index')->names('admin.categories');
 
-Route::resource('user', UserController::class)->names('admin.users');
+Route::resource('user', UserController::class)->middleware('can:admin.users.index')->names('admin.users');
+
+Route::get('reports', [RerportController::class, 'index'])->middleware('can:admin.reports.index')->name('admin.reports.index');
