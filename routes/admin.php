@@ -13,3 +13,7 @@ Route::resource('categories', CategoryController::class)->middleware('can:admin.
 Route::resource('user', UserController::class)->middleware('can:admin.users.index')->names('admin.users');
 
 Route::get('reports', [RerportController::class, 'index'])->middleware('can:admin.reports.index')->name('admin.reports.index');
+
+Route::get('reports/create', [RerportController::class, 'create'])->middleware('can:admin.reports.index')->name('admin.reports.create');
+
+/* Route::get('reports/print', [RerportController::class, 'print'])->middleware('can:admin.reports.index')->name('admin.reports.print'); */

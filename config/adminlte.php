@@ -316,6 +316,31 @@ return [
                 ],
             ],
         ],
+        'Daterangepicker' => [
+            'active' => false,
+            'files' => [
+                /* [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/jquery/jquery.min.js',
+                ], */
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => false,
             'files' => [
@@ -346,8 +371,8 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2/sweetalert2.all.js',
                 ],
             ],
         ],

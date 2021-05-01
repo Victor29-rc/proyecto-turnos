@@ -17,7 +17,7 @@ class ShiftController extends Controller
 {
 
     public function index()
-    {
+    {   
         $shifts = Shift::CurrentListOfShifts();
 
         return view('shifts.index', compact('shifts'));
@@ -30,7 +30,9 @@ class ShiftController extends Controller
     }
 
     public function store(Request $request){
-        
+        $today = (string) Carbon::today();
+        $var = explode(' ', $today);
+
         $request->validate([
             'category' => 'required'
         ]);
@@ -38,10 +40,9 @@ class ShiftController extends Controller
         $number = DB::table('shifts') //crea un auto incremente para cada categoria
             ->select('*')
             ->where('category_id', '=', $request->category)
+            ->whereRaw("date(shifts.created_at) = '$var[0]'")
             ->get()->count() + 1;
-
         
-
         $category = DB::table('categories') //obtiene el nombre de la categoria
         ->select('name')
         ->where('id', '=', $request->category)
@@ -91,7 +92,8 @@ class ShiftController extends Controller
 
     public function callNext()
     {
-        
+        $canceledListShift = Shift::CanceledShifts();
+
         $shift = DB::table('shifts') //selecciono el turno siguiente sin asignar
             ->join('categories', 'shifts.category_id', '=', 'categories.id')
             ->select('shifts.ticket_code', 'categories.priority', 'shifts.id', 'shifts.status', 'shifts.user_id')
@@ -112,7 +114,7 @@ class ShiftController extends Controller
            
             $ShiftList = Shift::QueueShiftList();
 
-            return view('shifts.show', compact('shift', 'ShiftList'));
+            return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
         }
         else{
 
@@ -139,7 +141,7 @@ class ShiftController extends Controller
 
             broadcast(new ShiftAssignedToUser($shifts));
 
-            return view('shifts.show', compact('shift', 'ShiftList'));
+            return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
         }
 
     }
@@ -150,6 +152,8 @@ class ShiftController extends Controller
         $shift = Shift::LatestShiftCalledByCashier();
 
         $ShiftList = Shift::QueueShiftList();
+        
+        $canceledListShift = Shift::CanceledShifts();
 
         if(empty($shift[0])){ //si no hay turnos por asignar
 
@@ -159,7 +163,7 @@ class ShiftController extends Controller
             $shift = array();
             array_push($shift, $values);
 
-            return view('shifts.show', compact('shift', 'ShiftList'));
+            return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
         }
         else{
 
@@ -168,7 +172,7 @@ class ShiftController extends Controller
             broadcast(new ShiftAssignedToUser($shifts)); */
             broadcast(new CallShiftAgain($shift));
 
-            return view('shifts.show', compact('shift', 'ShiftList'));
+            return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
         }
         
     }
@@ -176,8 +180,11 @@ class ShiftController extends Controller
     public function attented(){
 
         $shift = Shift::LatestShiftCalledByCashier();
+
         $ShiftList = Shift::QueueShiftList();
-        
+
+        $canceledListShift = Shift::CanceledShifts();
+
         if(empty($shift[0])){ //si no hay turnos por asignar
 
             $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO'];
@@ -186,7 +193,7 @@ class ShiftController extends Controller
             $shift = array();
             array_push($shift, $values);
         
-            return redirect()->route('shifts.show', compact('shift', 'ShiftList'))->with('info', 'No hay turno seleccionado por atender');
+            return redirect()->route('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'))->with('info', 'No hay turno seleccionado por atender');
         }
         else{
             $affected = DB::table('shifts')
@@ -198,7 +205,7 @@ class ShiftController extends Controller
 
                 broadcast(new AmountOfShiftsUpdated($ShiftList));
 
-            return redirect()->route('shifts.show', compact('ShiftList'))->with('info', 'El turno '. $shift[0]->ticket_code. ' ha sido atendido con éxito');
+            return redirect()->route('shifts.show', compact('ShiftList', 'canceledListShift'))->with('info', 'El turno '. $shift[0]->ticket_code. ' ha sido atendido con éxito');
         }
     }
 
@@ -214,19 +221,25 @@ class ShiftController extends Controller
 
             $shift = array();
             array_push($shift, $values);
-        
-            return redirect()->route('shifts.show', compact('shift', 'ShiftList'))->with('info', 'No hay turno seleccionado por cancelar');
+            
+            $canceledListShift = Shift::CanceledShifts();
+
+
+            return redirect()->route('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'))->with('info', 'No hay turno seleccionado por cancelar');
         }
         else{
             $affected = DB::table('shifts')
                 ->where('id', $shift[0]->id)
                 ->update(['status' => '0']);
+
+            $canceledListShift = Shift::CanceledShifts();
            
-            return redirect()->route('shifts.show', compact('shift', 'ShiftList'))->with('info', 'El turno '. $shift[0]->ticket_code. ' ha sido cancelado con éxito');
+            return redirect()->route('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'))->with('info', 'El turno '. $shift[0]->ticket_code. ' ha sido cancelado con éxito');
         }
     }
 
     public function show(){
+
         $values = ['ticket_code' => '', 'place' => '', 'priority' => '', 'status' => '2'];
         $values = (object) $values;
 
@@ -234,7 +247,32 @@ class ShiftController extends Controller
         array_push($shift, $values);
 
         $ShiftList = Shift::QueueShiftList();
+        $canceledListShift = Shift::CanceledShifts();
 
-        return view('shifts.show', compact('shift', 'ShiftList'));
+        return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'canceled_shifts' => 'required',
+        ]);
+
+        $affected = DB::table('shifts')
+                ->where('id', $request->canceled_shifts)
+                ->update(['status' => '2']);
+
+
+        $aux = $request->ticket_code;
+
+        $values = ['ticket_code' => '', 'place' => '', 'priority' => '', 'status' => '2'];
+        $values = (object) $values;
+
+        $shift = array();
+        array_push($shift, $values);
+
+        $ShiftList = Shift::QueueShiftList();
+        $canceledListShift = Shift::CanceledShifts();
+
+        return redirect()->route('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'))->with('info', 'Turno '. $aux .'ha sido actualizado con exito');
     }
 }

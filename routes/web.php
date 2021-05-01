@@ -32,6 +32,8 @@ Route::get('show/attended', [ShiftController::class, 'attented'])->name('shifts.
 
 Route::get('show/cancel', [ShiftController::class, 'cancel'])->name('shifts.cancel')->middleware('can:shifts.callNext');
 
+Route::get('show/update', [ShiftController::class, 'update'])->name('shifts.update')->middleware('can:shifts.callNext');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
