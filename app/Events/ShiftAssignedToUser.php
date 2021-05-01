@@ -33,7 +33,7 @@ class ShiftAssignedToUser implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::debug("listado de turnos {$this->shifts}");
+        /* \Log::debug("listado de turnos {$this->shifts}"); */
         return new Channel('listOfShiftsUpdated');
     }
 }

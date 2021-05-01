@@ -16,7 +16,7 @@ class CreateShiftsTable extends Migration
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
 
-            $table->string('ticket_code')->unique();
+            $table->string('ticket_code');
             $table->date('date_time');
             $table->enum('status', [0, 1, 2])->default(1);// 0 - cancelado, 1 - en progreso, 2 - atendido.
 
@@ -25,6 +25,8 @@ class CreateShiftsTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+
+            $table->unique(['ticket_code', 'date_time']);
 
             $table->timestamps();
         });

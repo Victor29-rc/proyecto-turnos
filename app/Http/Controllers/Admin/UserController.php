@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 
+use Spatie\Permission\Models\Role;
+
 class UserController extends Controller
 {
     /**
@@ -27,7 +29,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::All();
+
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -53,6 +57,8 @@ class UserController extends Controller
         $user->password = $password;
         $user->save();
 
+        $user->roles()->sync($request->roles);
+
         return redirect()->route('admin.users.edit', $user)->with('info', 'El usuario ha sido creado con éxito');
     }
 
@@ -75,7 +81,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        $roles = Role::All();
+
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -95,6 +103,8 @@ class UserController extends Controller
             'password' => 'required|min:8',
             'place' => "required|numeric|unique:users,place,$user->id"
         ]);
+
+        $user->roles()->sync($request->roles);
 
         $user->update($request->all());
         

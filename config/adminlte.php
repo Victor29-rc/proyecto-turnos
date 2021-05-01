@@ -187,7 +187,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => '/show',
+    'dashboard_url' => '/',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -239,71 +239,25 @@ return [
             'url'         => 'admin',
             'icon'        => 'fas fa-tachometer-alt fa-fw',
             'label_color' => 'success',
+            'can'         => 'admin.index'
         ],
-        ['header' => 'ADMINISTRADOR '],
         [
             'text' => 'Categorías',
             'route'  => 'admin.categories.index',
             'icon' => 'fab fa-fw fa-buffer',
+            'can' => 'admin.categories.index'
         ],
         [
             'text' => 'Usuarios',
             'route'  => 'admin.users.index',
-            'icon' => 'fas fa-fw fa-user',
+            'icon' => 'fas fa-users fa-fw',
+            'can' => 'admin.users.index'
         ],
         [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
+            'text' => 'Reportes',
+            'route'  => 'admin.reports.index',
+            'icon' => 'fas fa-file-alt fa-fw',
+            'can' => 'admin.reports.index'
         ],
     ],
 
@@ -362,6 +316,31 @@ return [
                 ],
             ],
         ],
+        'Daterangepicker' => [
+            'active' => false,
+            'files' => [
+                /* [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/jquery/jquery.min.js',
+                ], */
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => false,
             'files' => [
@@ -392,8 +371,8 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2/sweetalert2.all.js',
                 ],
             ],
         ],

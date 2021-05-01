@@ -9,7 +9,25 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+
+            <h2 class="h5">
+                Listado de roles
+            </h2>
+
             {!! Form::open(['route' => 'admin.users.store']) !!}
+
+                @foreach ($roles as $role)
+                    <div>
+                        <label>
+                            {!! Form::checkbox('roles[]', $role->id, null, ['class' => 'mr-1']) !!}
+                            {{$role->name}}
+                        </label>
+                    </div>
+                @endforeach
+
+                <h2 class="h5">
+                    Datos del usuario
+                </h2>
 
                 <div class="form-group">
                     {!! Form::label('name', 'Nombre') !!}
