@@ -16,6 +16,7 @@ class Shift extends Model
 
 
     public function scopeQueueShiftList(){
+        
         return DB::table('shifts')
             ->where('user_id', null)
             ->count();
@@ -23,11 +24,14 @@ class Shift extends Model
 
    
     public function scopeCurrentListOfShifts(){
+        $today = (string) Carbon::today();
+        $var = explode(' ', $today);
         
         return DB::table('shifts')
             ->join('categories', 'shifts.category_id', '=', 'categories.id')
             ->join('users', 'shifts.user_id', '=', 'users.id')
             ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status')
+            ->whereRaw("date(shifts.created_at) = '$var[0]'")
             /* ->where('shifts.status', '=', '1') */
             ->latest('shifts.updated_at', 'asc')
             ->take(5)

@@ -36,10 +36,10 @@
                                                         PUESTO
                                                     </th>
 
-                                                    <th scope="col"
+                                                   {{--  <th scope="col"
                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                         PRIORIDAD
-                                                    </th>
+                                                    </th> --}}
                                                 </tr>
                                             </thead>
 
@@ -114,20 +114,20 @@
                         let cell_place = document.createElement("td");
                             cell_place.className += "px-6 py-4 text-sm text-gray-500";
 
-                        let cell_priority = document.createElement("td");
-                            cell_priority.className += "px-6 py-4 text-sm text-gray-500";
+                      /*   let cell_priority = document.createElement("td");
+                            cell_priority.className += "px-6 py-4 text-sm text-gray-500"; */
 
                         let value_ticket = document.createTextNode(element.ticket_code);
                         let value_place = document.createTextNode(element.place);
-                        let value_priority = document.createTextNode(element.priority);
-
+                      /*   let value_priority = document.createTextNode(element.priority);
+ */
                         cell_ticket.appendChild(value_ticket);
                         cell_place.appendChild(value_place);
-                        cell_priority.appendChild(value_priority);
+                 /*        cell_priority.appendChild(value_priority); */
 
                         row.appendChild(cell_ticket);
                         row.appendChild(cell_place);
-                        row.appendChild(cell_priority);
+                     /*    row.appendChild(cell_priority); */
                         
                         shifts.appendChild(row);
                         

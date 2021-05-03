@@ -72,10 +72,6 @@
                                             PUESTO
                                         </th>
 
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            PRIORIDAD
-                                        </th>
                                     </tr>
                                 </thead>
 
@@ -99,11 +95,6 @@
                                             @endif
                                         </td>
 
-                                        <td class="px-6 py-4 text-sm text-gray-500">
-                                            @if (isset($shift) && $shift != null)
-                                                {{ $shift[0]->priority }}
-                                            @endif
-                                        </td>
                                     </tr>
 
                                     <!-- More items... -->
@@ -137,7 +128,6 @@
 
         </form>
        
-            
 
     </div>
 
