@@ -96,7 +96,7 @@ class ShiftController extends Controller
 
         $shift = DB::table('shifts') //selecciono el turno siguiente sin asignar
             ->join('categories', 'shifts.category_id', '=', 'categories.id')
-            ->select('shifts.ticket_code', 'categories.priority', 'shifts.id', 'shifts.status', 'shifts.user_id')
+            ->select('shifts.ticket_code', 'shifts.id', 'shifts.status', 'shifts.user_id')
             ->where('shifts.status', '=', '1')
             ->where('shifts.user_id', '=', null)
             ->orderBy('categories.priority', 'asc')
@@ -106,7 +106,7 @@ class ShiftController extends Controller
 
         if(empty($shift[0])){ //si no hay turnos por asignar
 
-            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO', 'status' => '2'];
+            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'status' => '2'];
             $values = (object) $values;
 
             $shift = array();
@@ -127,7 +127,7 @@ class ShiftController extends Controller
                 $shift = DB::table('shifts') //refrescando la consulta con el userd_id actualizado en la vista del cajero
                     ->join('categories', 'shifts.category_id', '=', 'categories.id')
                     ->join('users', 'shifts.user_id', '=', 'users.id')
-                    ->select('shifts.ticket_code', 'users.place', 'categories.priority', 'shifts.id', 'shifts.status', 'shifts.user_id')
+                    ->select('shifts.ticket_code', 'users.place', 'shifts.id', 'shifts.status', 'shifts.user_id')
                     ->where('shifts.id', '=', $shift[0]->id)
                     ->orderBy('categories.priority', 'asc')
                     ->orderBy('shifts.id', 'asc')
@@ -157,7 +157,7 @@ class ShiftController extends Controller
 
         if(empty($shift[0])){ //si no hay turnos por asignar
 
-            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO', 'status' => '2'];
+            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'status' => '2'];
             $values = (object) $values;
 
             $shift = array();
@@ -167,9 +167,6 @@ class ShiftController extends Controller
         }
         else{
 
-            /* $shifts = Shift::CurrentListOfShifts();
-
-            broadcast(new ShiftAssignedToUser($shifts)); */
             broadcast(new CallShiftAgain($shift));
 
             return view('shifts.show', compact('shift', 'ShiftList', 'canceledListShift'));
@@ -187,7 +184,7 @@ class ShiftController extends Controller
 
         if(empty($shift[0])){ //si no hay turnos por asignar
 
-            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO'];
+            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO'];
             $values = (object) $values;
 
             $shift = array();
@@ -216,7 +213,7 @@ class ShiftController extends Controller
 
         if(empty($shift[0])){ //si no hay turnos por asignar
 
-            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO', 'priority' => 'VACIO'];
+            $values = ['ticket_code' => 'VACIO', 'place' => 'VACIO'];
             $values = (object) $values;
 
             $shift = array();
@@ -240,7 +237,7 @@ class ShiftController extends Controller
 
     public function show(){
 
-        $values = ['ticket_code' => '', 'place' => '', 'priority' => '', 'status' => '2'];
+        $values = ['ticket_code' => '', 'place' => '', 'status' => '2'];
         $values = (object) $values;
 
         $shift = array();
@@ -264,7 +261,7 @@ class ShiftController extends Controller
 
         $aux = $request->ticket_code;
 
-        $values = ['ticket_code' => '', 'place' => '', 'priority' => '', 'status' => '2'];
+        $values = ['ticket_code' => '', 'place' => '', 'status' => '2'];
         $values = (object) $values;
 
         $shift = array();
